@@ -11,4 +11,12 @@ return function (App $app) {
 		$response->getBody()->write('Hello World!');
 		return $response;
 	});
+
+	$app->get('/balance', function (Request $request, Response $response, $args) {
+		return (new \App\Http\BalanceController())->handle($request);
+	});
+
+	$app->post('/event', function (Request $request, Response $response, $args) {
+		return (new \App\Http\EventController())->handle($request);
+	});
 };
