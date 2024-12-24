@@ -1,5 +1,5 @@
 {
-	"name": "rafael.carvalho/balance-api",
+	"name": "rafaelcx/balance-api",
 	"description": "Balance API",
 	"authors": [
 		{
@@ -8,7 +8,7 @@
 		}
 	],
 	"require": {
-		"php": "^8.3",
+		"php": "^8.2",
 		"slim/slim": "4.*",
 		"guzzlehttp/psr7": "^2",
 		"guzzlehttp/guzzle": "^7.0"
