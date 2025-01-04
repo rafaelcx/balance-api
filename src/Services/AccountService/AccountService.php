@@ -1,0 +1,22 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services\AccountService;
+
+use App\Services\AccountService\Exception\AccountNotFoundException;
+use App\Services\AccountService\Repository\AccountRepository;
+use App\Services\AccountService\Repository\AccountRepositoryException;
+
+class AccountService {
+
+	public function getBalance(string $account_id): string {
+		try {
+			$account = (new AccountRepository())->getAccount($account_id);
+		} catch(AccountRepositoryException $e) {
+			throw new AccountNotFoundException($e->getMessage());
+		}
+		return $account->amount;
+	}
+
+}
