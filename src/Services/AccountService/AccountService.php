@@ -27,4 +27,12 @@ class AccountService {
 		}
 	}
 
+	public function withdraw(string $account_id, string $amount): void {
+		try {
+			(new AccountRepository())->withdrawFromAccount($account_id, $amount);
+		} catch(AccountRepositoryException $e) {
+			throw new AccountNotFoundException($e->getMessage());
+		}
+	}
+
 }

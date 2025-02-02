@@ -26,4 +26,13 @@ class AccountRepository {
 		self::$account_list[$account_id] = $account;
 	}
 
+	public function withdrawFromAccount(string $account_id, string $amount): void {
+		$account = self::$account_list[$account_id] 
+			?? throw new AccountRepositoryException('Account not found');
+
+		$new_amount = $account->amount - $amount;
+		$account->amount = (string) $new_amount;
+		self::$account_list[$account_id] = $account;
+	}
+
 }

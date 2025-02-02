@@ -36,13 +36,22 @@ class EventControllerTest extends CustomTestCase {
 	}
 
 	public function testController_WhenWithdrawEvent_WhenSuccessful(): void {
+		$this->simulateAccountWithAmount('1', '10');
+
+		$request_body = [
+			'type' => 'withdraw',
+			'origin' => '1',
+			'amount' => '10',
+		];
+
 		$result = $this->request_simulator
 			->withMethod('POST')
-			->withBody(['type' => 'withdraw'])
+			->withBody($request_body)
 			->withPath('/event')
 			->dispatch();
 
 		$this->assertSame(200, $result->getStatusCode());
+		$this->assertJson('{"origin": {"id":"1", "balance":20}}', $result->getBody()->getContents());
 	}
 
 	public function testController_WhenTransferEvent_WhenSuccessful(): void {
