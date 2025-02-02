@@ -17,7 +17,7 @@ class EventController {
 
 		return match ($request_dto->type ?? '') {
 			'deposit'  => $this->handleDepositEvent($request_dto),
-			'withdraw' => $this->handleWithdrawEvent(),
+			'withdraw' => $this->handleWithdrawEvent($request_dto),
 			'transfer' => $this->handleTransferEvent(),
 			default    => $this->handleUnknownEvent(),
 		};
@@ -46,8 +46,26 @@ class EventController {
 		return new Response(200, [], $response_body);
 	}
 
-	private function handleWithdrawEvent(): ResponseInterface {
-		return new Response(200);	
+	private function handleWithdrawEvent(\stdClass $request_dto): ResponseInterface {
+		$account_id = $request_dto->origin ?? '';
+		$amount = $request_dto->amount ?? '';
+
+		$account_service = new AccountService();
+
+		try {
+			$account_service->withdraw($account_id, $amount);
+			$updated_amount = $account_service->getBalance($account_id);
+		} catch(AccountNotFoundException $_) {
+			return new Response(400);
+		}
+
+		$response_body = json_encode([
+			'origin' => [
+				'id' => $account_id,
+				'amount' => $updated_amount,
+			],
+		]);
+		return new Response(200, [], $response_body);
 	}
 
 	private function handleTransferEvent(): ResponseInterface {
