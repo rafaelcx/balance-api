@@ -45,6 +45,19 @@ class AccountServiceTest extends CustomTestCase {
 		$this->assertSame('5', $updated_balance);
 	}
 
+	public function testTransfer_WhenSuccessful(): void {
+		$this->simulateAccountWithAmount(id: '1', amount: '10');
+		$this->simulateAccountWithAmount(id: '2', amount: '10');
+		
+		$this->account_service->transfer(origin_account_id: '1', destination_account_id: '2', amount: '5');
+
+		$updated_ori_balance = $this->account_service->getBalance(account_id: '1');
+		$updated_dst_balance = $this->account_service->getBalance(account_id: '2');
+
+		$this->assertSame('5', $updated_ori_balance);
+		$this->assertSame('15', $updated_dst_balance);
+	}
+
 	public function testGetBalance_WhenAccountDoesNotExist(): void {
 		$this->expectException(AccountNotFoundException::class);
 		$this->expectExceptionMessage('Account not found');
@@ -61,6 +74,20 @@ class AccountServiceTest extends CustomTestCase {
 		$this->expectException(AccountNotFoundException::class);
 		$this->expectExceptionMessage('Account not found');
 		$this->account_service->withdraw(account_id: '2', amount: '10');
+	}
+
+	public function testTransfer_WhenOriginAccountDoesNotExist(): void {
+		$this->simulateAccountWithAmount(id: '2', amount: '10');
+		$this->expectException(AccountNotFoundException::class);
+		$this->expectExceptionMessage('Account not found');
+		$this->account_service->transfer(origin_account_id: '1', destination_account_id: '2', amount: '5');
+	}
+
+	public function testTransfer_WhenDestinationAccountDoesNotExist(): void {
+		$this->simulateAccountWithAmount(id: '1', amount: '10');
+		$this->expectException(AccountNotFoundException::class);
+		$this->expectExceptionMessage('Account not found');
+		$this->account_service->transfer(origin_account_id: '1', destination_account_id: '2', amount: '5');
 	}
 
 	private function simulateAccountWithAmount(string $id, string $amount): void {

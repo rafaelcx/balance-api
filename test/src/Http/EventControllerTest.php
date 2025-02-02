@@ -55,13 +55,24 @@ class EventControllerTest extends CustomTestCase {
 	}
 
 	public function testController_WhenTransferEvent_WhenSuccessful(): void {
+		$this->simulateAccountWithAmount('1', '10');
+		$this->simulateAccountWithAmount('2', '10');
+		
+		$request_body = [
+			'type' => 'transfer',
+			'origin' => '1',
+			'destination' => '2',
+			'amount' => '5',
+		];
+		
 		$result = $this->request_simulator
 			->withMethod('POST')
-			->withBody(['type' => 'transfer'])
+			->withBody($request_body)
 			->withPath('/event')
 			->dispatch();
 
 		$this->assertSame(200, $result->getStatusCode());
+		$this->assertJsonStringEqualsJsonString('{"origin": {"id":"1", "balance":"5"}, "destination": {"id":"2", "balance":"15"}}', $result->getBody()->getContents());
 	}
 
 	public function testController_WhenUnknownEvent(): void {
