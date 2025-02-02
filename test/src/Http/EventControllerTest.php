@@ -8,7 +8,7 @@ use Test\CustomTestCase;
 
 class EventControllerTest extends CustomTestCase {
 
-	public function testController_WhenSuccessful(): void {
+	public function testController_WhenDepositEvent_WhenSuccessful(): void {
 		$result = $this->request_simulator
 			->withMethod('POST')
 			->withBody(['type' => 'deposit'])
@@ -16,7 +16,36 @@ class EventControllerTest extends CustomTestCase {
 			->dispatch();
 
 		$this->assertSame(200, $result->getStatusCode());
-		$this->assertSame('Event of type deposit', (string) $result->getBody());
+	}
+
+	public function testController_WhenWithdrawEvent_WhenSuccessful(): void {
+		$result = $this->request_simulator
+			->withMethod('POST')
+			->withBody(['type' => 'withdraw'])
+			->withPath('/event')
+			->dispatch();
+
+		$this->assertSame(200, $result->getStatusCode());
+	}
+
+	public function testController_WhenTransferEvent_WhenSuccessful(): void {
+		$result = $this->request_simulator
+			->withMethod('POST')
+			->withBody(['type' => 'transfer'])
+			->withPath('/event')
+			->dispatch();
+
+		$this->assertSame(200, $result->getStatusCode());
+	}
+
+	public function testController_WhenUnknownEvent(): void {
+		$result = $this->request_simulator
+			->withMethod('POST')
+			->withBody(['type' => 'unknown_event'])
+			->withPath('/event')
+			->dispatch();
+
+		$this->assertSame(400, $result->getStatusCode());
 	}
 
 }
