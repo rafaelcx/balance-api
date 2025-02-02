@@ -39,7 +39,7 @@ class EventController {
 		$response_body = json_encode([
 			'destination' => [
 				'id' => $account_id,
-				'amount' => $updated_amount,
+				'balance' => $updated_amount,
 			],
 		]);
 
@@ -62,7 +62,7 @@ class EventController {
 		$response_body = json_encode([
 			'origin' => [
 				'id' => $account_id,
-				'amount' => $updated_amount,
+				'balance' => $updated_amount,
 			],
 		]);
 		return new Response(200, [], $response_body);

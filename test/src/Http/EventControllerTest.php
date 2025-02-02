@@ -32,7 +32,7 @@ class EventControllerTest extends CustomTestCase {
 			->dispatch();
 
 		$this->assertSame(200, $result->getStatusCode());
-		$this->assertJson('{"destination": {"id":"1", "balance":20}}', $result->getBody()->getContents());
+		$this->assertJsonStringEqualsJsonString('{"destination": {"id":"1", "balance":"20"}}', $result->getBody()->getContents());
 	}
 
 	public function testController_WhenWithdrawEvent_WhenSuccessful(): void {
@@ -51,7 +51,7 @@ class EventControllerTest extends CustomTestCase {
 			->dispatch();
 
 		$this->assertSame(200, $result->getStatusCode());
-		$this->assertJson('{"origin": {"id":"1", "balance":20}}', $result->getBody()->getContents());
+		$this->assertJsonStringEqualsJsonString('{"origin": {"id":"1", "balance":"0"}}', $result->getBody()->getContents());
 	}
 
 	public function testController_WhenTransferEvent_WhenSuccessful(): void {
