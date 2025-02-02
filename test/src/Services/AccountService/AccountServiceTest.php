@@ -31,10 +31,23 @@ class AccountServiceTest extends CustomTestCase {
 		$this->assertSame('10', $result);
 	}
 
+	public function testDeposit_WhenSuccessful(): void {
+		$this->simulateAccountWithAmount(id: '1', amount: '10');
+		$this->account_service->deposit(account_id: '1', amount: '10');
+		$updated_balance = $this->account_service->getBalance(account_id: '1');
+		$this->assertSame('20', $updated_balance);
+	}
+
 	public function testGetBalance_WhenAccountDoesNotExist(): void {
 		$this->expectException(AccountNotFoundException::class);
 		$this->expectExceptionMessage('Account not found');
 		$this->account_service->getBalance(account_id: '2');
+	}
+
+	public function testDeposit_WhenAccountDoesNotExist(): void {
+		$this->expectException(AccountNotFoundException::class);
+		$this->expectExceptionMessage('Account not found');
+		$this->account_service->deposit(account_id: '2', amount: '10');
 	}
 
 	private function simulateAccountWithAmount(string $id, string $amount): void {

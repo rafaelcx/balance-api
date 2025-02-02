@@ -7,8 +7,8 @@ namespace App\Services\AccountService\Repository;
 class Account {
 
 	public function __construct(
-		public readonly string $id,
-		public readonly string $amount,
+		public string $id,
+		public string $amount,
 	) {}
 
 }

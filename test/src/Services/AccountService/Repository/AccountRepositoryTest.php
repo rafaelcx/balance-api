@@ -28,10 +28,27 @@ class AccountRepositoryTest extends CustomTestCase {
 		$this->assertSame($account->amount, $result->amount);
 	}
 
+	public function testDepositToAccount(): void {
+		$repository = new AccountRepository;
+		$account = new Account(id: '1', amount: '10.1');
+		$repository->createAccount($account);
+
+		$repository->depositToAccount($account->id, amount: '10.1');
+		$updated_account = $repository->getAccount($account->id);
+
+		$this->assertSame('20.2', $updated_account->amount);
+	}
+
 	public function testGetAccount_WhenAccountIsNotFound_ShouldThrow(): void {
 		$this->expectException(AccountRepositoryException::class);
 		$this->expectExceptionMessage('Account not found');
 		$repository = (new AccountRepository)->getAccount('1');
+	}
+
+	public function testDepositToAccount_WhenAccountIsNotFound_ShouldThrow(): void {
+		$this->expectException(AccountRepositoryException::class);
+		$this->expectExceptionMessage('Account not found');
+		$repository = (new AccountRepository)->depositToAccount('1', '10');
 	}
 
 }
