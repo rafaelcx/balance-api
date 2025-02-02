@@ -35,4 +35,9 @@ class AccountRepository {
 		self::$account_list[$account_id] = $account;
 	}
 
+	public function transferBetweenAccounts(string $origin_acc_id, string $destination_acc_id, string $amount): void {
+		$this->withdrawFromAccount($origin_acc_id, $amount);
+		$this->depositToAccount($destination_acc_id, $amount);
+	}
+
 }

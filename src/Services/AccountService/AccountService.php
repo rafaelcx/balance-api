@@ -35,4 +35,12 @@ class AccountService {
 		}
 	}
 
+	public function transfer(string $origin_account_id, string $destination_account_id, string $amount): void {
+		try {
+			(new AccountRepository())->transferBetweenAccounts($origin_account_id, $destination_account_id, $amount);
+		} catch(AccountRepositoryException $e) {
+			throw new AccountNotFoundException($e->getMessage());
+		}
+	}
+
 }

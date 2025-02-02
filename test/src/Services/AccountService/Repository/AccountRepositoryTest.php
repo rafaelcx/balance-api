@@ -50,6 +50,24 @@ class AccountRepositoryTest extends CustomTestCase {
 		$this->assertSame('0.1', $updated_account->amount);
 	}
 
+	public function testTransferBetweenAccounts(): void {
+		$repository = new AccountRepository;
+
+		$origin_account = new Account(id: '1', amount: '10.2');
+		$destination_account = new Account(id: '2', amount: '10.2');
+
+		$repository->createAccount($origin_account);
+		$repository->createAccount($destination_account);
+
+		$repository->transferBetweenAccounts($origin_account->id, $destination_account->id, amount: '5.1');
+
+		$updated_ori_acc = $repository->getAccount($origin_account->id);
+		$updated_dst_acc = $repository->getAccount($destination_account->id);
+
+		$this->assertSame('5.1', $updated_ori_acc->amount);
+		$this->assertSame('15.3', $updated_dst_acc->amount);
+	}
+
 	public function testGetAccount_WhenAccountIsNotFound_ShouldThrow(): void {
 		$this->expectException(AccountRepositoryException::class);
 		$this->expectExceptionMessage('Account not found');
@@ -67,5 +85,26 @@ class AccountRepositoryTest extends CustomTestCase {
 		$this->expectExceptionMessage('Account not found');
 		$repository = (new AccountRepository)->withdrawFromAccount('1', '10');
 	}
+
+	public function testWithdrawFromAccount_WhenOriginAccountIsNotFound_ShouldThrow(): void {
+		$repository = new AccountRepository;
+		$destination_account = new Account(id: '1', amount: '10.2');
+		$repository->createAccount($destination_account);
+
+		$this->expectException(AccountRepositoryException::class);
+		$this->expectExceptionMessage('Account not found');
+		$repository->transferBetweenAccounts('not_existent', $destination_account->id, amount: '5.1');
+	}
+
+	public function testWithdrawFromAccount_WhenDestinationAccountIsNotFound_ShouldThrow(): void {
+		$repository = new AccountRepository;
+		$origin_account = new Account(id: '', amount: '10.2');
+		$repository->createAccount($origin_account);
+
+		$this->expectException(AccountRepositoryException::class);
+		$this->expectExceptionMessage('Account not found');
+		$repository->transferBetweenAccounts($origin_account->id, 'not_existent', amount: '5.1');
+	}
+
 
 }
