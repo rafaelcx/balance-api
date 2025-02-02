@@ -17,4 +17,13 @@ class AccountRepository {
 			?? throw new AccountRepositoryException('Account not found');
 	}
 
+	public function depositToAccount(string $account_id, string $amount): void {
+		$account = self::$account_list[$account_id] 
+			?? throw new AccountRepositoryException('Account not found');
+		
+		$new_amount = $account->amount + $amount;
+		$account->amount = (string) $new_amount;
+		self::$account_list[$account_id] = $account;
+	}
+
 }

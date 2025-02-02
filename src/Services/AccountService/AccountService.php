@@ -19,4 +19,12 @@ class AccountService {
 		return $account->amount;
 	}
 
+	public function deposit(string $account_id, string $amount): void {
+		try {
+			(new AccountRepository())->depositToAccount($account_id, $amount);
+		} catch(AccountRepositoryException $e) {
+			throw new AccountNotFoundException($e->getMessage());
+		}
+	}
+
 }
